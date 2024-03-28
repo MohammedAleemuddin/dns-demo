@@ -1,14 +1,11 @@
-# Use a base image with a shell (such as Alpine Linux)
-FROM alpine:latest
+# Use an official Nginx runtime as a parent image
+FROM nginx:alpine
 
-# Set working directory
-WORKDIR /app
+# Copy custom configuration file from the current directory
+COPY nginx.conf /etc/nginx/nginx.conf
 
-# Copy the shell script into the container
-COPY my_script.sh /app/
+# Copy static files into the Nginx web root directory
+COPY index.html /usr/share/nginx/html
 
-# Set permissions to make the script executable (if needed)
-RUN chmod +x my_script.sh
-
-# Define the command to run the script when the container starts
-CMD ["./my_script.sh"]
+# Expose port 80 to allow incoming traffic
+EXPOSE 80
