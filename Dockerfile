@@ -1,3 +1,3 @@
 FROM ubuntu:latest
 CMD echo "Hello, world!"
-EXPOSE 80
+EXPOSE 8080
