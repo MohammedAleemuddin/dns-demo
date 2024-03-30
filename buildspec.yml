@@ -10,10 +10,20 @@ phases:
     commands:
       - echo Build started on `date`
       - echo Building the Docker image...
-      - docker build -t 323526869397.dkr.ecr.us-west-2.amazonaws.com/my-ecr-repo:latest .
+      - docker build -t my-ecr-repo:latest .
       - echo Build completed on `date`
+      - echo Tagging the Docker image...
+      - docker tag my-ecr-repo:latest 323526869397.dkr.ecr.us-west-2.amazonaws.com/my-ecr-repo:latest
+      - echo Tagging completed on `date`
   post_build:
     commands:
       - echo Pushing the Docker image to Amazon ECR...
       - docker push 323526869397.dkr.ecr.us-west-2.amazonaws.com/my-ecr-repo:latest
       - echo Push completed on `date`
+      - echo Deploying to AWS CodeDeploy...
+      - aws deploy create-deployment --application-name MyApplication --deployment-group-name blueGreenDeploymentGroup --region us-west-2 --revision revisionType=ECR,image={name=323526869397.dkr.ecr.us-west-2.amazonaws.com/my-ecr-repo:latest}
+
+artifacts:
+  files:
+    - '**/*'
+  discard-paths: yes
