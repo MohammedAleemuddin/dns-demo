@@ -17,3 +17,4 @@ phases:
       - echo Pushing the Docker image to Amazon ECR...
       - docker push 323526869397.dkr.ecr.us-west-2.amazonaws.com/my-ecr-repo:latest
       - echo Push completed on `date`
+      - aws s3 cp --recursive --include '*' $CODEBUILD_SRC_DIR/output/ s3://$CODEPIPELINE_ARTIFACT_BUCKET_NAME/
