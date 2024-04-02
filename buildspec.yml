@@ -26,7 +26,7 @@ phases:
         if [ -n "$IMAGE_TAG" ]; then
           docker push $ECR_REPO_URI:$IMAGE_TAG
         fi
-      - printf '[{"name":"CONTAINER_NAME","imageUri":"%s"}]' $ECR_REPO_URI:$IMAGE_TAG > imagedefinitions.json
+      - printf '[{"name":"MyContainer","imageUri":"%s"}]' $ECR_REPO_URI:$IMAGE_TAG > imagedefinitions.json
 artifacts:
   files:
     - imagedefinitions.json
