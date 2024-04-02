@@ -5,6 +5,10 @@ env:
     ECR_REPO_URI: "{{resolve:ECR_REPO_URI}}"
 
 phases:
+  install:
+    runtime-versions:
+      nodejs: 14
+      docker: 20
   pre_build:
     commands:
       - echo Logging in to Amazon ECR...
@@ -27,6 +31,10 @@ artifacts:
     - imagedefinitions.json
   secondary-artifacts:
     Artifact_Build_Build:
+      files:
+        - imagedefinitions.json
+      base-directory: .
+    DeployOutput:
       files:
         - imagedefinitions.json
       base-directory: .
