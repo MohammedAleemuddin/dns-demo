@@ -1,9 +1,5 @@
 version: 0.2
 
-env:
-  variables:
-    ECR_REPO_URI: "{{resolve:ECR_REPO_URI}}"
-
 phases:
   pre_build:
     commands:
@@ -14,23 +10,14 @@ phases:
       - echo Build started on `date`
       - echo Building the Docker image...
       - docker build -t $ECR_REPO_URI:latest .
-      - docker tag $ECR_REPO_URI:latest $ECR_REPO_URI:$CODEBUILD_RESOLVED_SOURCE_VERSION
+      - docker tag $ECR_REPO_URI:latest $ECR_REPO_URI:$IMAGE_TAG
   post_build:
     commands:
       - echo Build completed on `date`
       - echo Pushing the Docker image to ECR...
       - docker push $ECR_REPO_URI:latest
-      - docker push $ECR_REPO_URI:$CODEBUILD_RESOLVED_SOURCE_VERSION
-      - printf '[{"name":"MyContainer","imageUri":"%s"}]' $ECR_REPO_URI:$CODEBUILD_RESOLVED_SOURCE_VERSION > imagedefinitions.json
+      - docker push $ECR_REPO_URI:$IMAGE_TAG
+      - printf '[{"name":"MyContainer","imageUri":"%s"}]' $ECR_REPO_URI:$IMAGE_TAG > imagedefinitions.json
 artifacts:
   files:
     - imagedefinitions.json
-  secondary-artifacts:
-    Artifact_Build_Build:
-      files:
-        - imagedefinitions.json
-      base-directory: .
-    DeployOutput:
-      files:
-        - imagedefinitions.json
-      base-directory: .
