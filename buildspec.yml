@@ -10,14 +10,23 @@ phases:
       - echo Build started on `date`
       - echo Building the Docker image...
       - docker build -t $ECR_REPO_URI:latest .
-      - docker tag $ECR_REPO_URI:latest $ECR_REPO_URI:$IMAGE_TAG
+      - |
+        if [ -z "$IMAGE_TAG" ]; then
+          echo "IMAGE_TAG is not set, using 'latest' tag"
+          docker tag $ECR_REPO_URI:latest $ECR_REPO_URI:latest
+        else
+          docker tag $ECR_REPO_URI:latest $ECR_REPO_URI:$IMAGE_TAG
+        fi
   post_build:
     commands:
       - echo Build completed on `date`
       - echo Pushing the Docker image to ECR...
       - docker push $ECR_REPO_URI:latest
-      - docker push $ECR_REPO_URI:$IMAGE_TAG
-      - printf '[{"name":"MyContainer","imageUri":"%s"}]' $ECR_REPO_URI:$IMAGE_TAG > imagedefinitions.json
+      - |
+        if [ -n "$IMAGE_TAG" ]; then
+          docker push $ECR_REPO_URI:$IMAGE_TAG
+        fi
+      - printf '[{"name":"CONTAINER_NAME","imageUri":"%s"}]' $ECR_REPO_URI:$IMAGE_TAG > imagedefinitions.json
 artifacts:
   files:
     - imagedefinitions.json
