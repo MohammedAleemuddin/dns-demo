@@ -25,4 +25,8 @@ phases:
 artifacts:
   files:
     - imagedefinitions.json
-     
+  secondary-artifacts:
+    Artifact_Build_Build:
+      files:
+        - imagedefinitions.json
+      base-directory: .
