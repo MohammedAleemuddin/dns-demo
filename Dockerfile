@@ -1,17 +1,16 @@
-# Use the official Python image as the base image
-FROM python:3.9-slim
+FROM amazonlinux:2
 
-# Set the working directory in the container
-WORKDIR /app
+ENV PATH="$PATH:/root/.local/bin"
 
-# Copy the Python script into the container
+RUN yum clean all && yum install -y amazon-linux-extras && amazon-linux-extras install python3.8
+
+RUN curl -O https://bootstrap.pypa.io/get-pip.py && python3.8 get-pip.py
+
 COPY hello.py .
 
-# Install any needed packages
-RUN pip install --no-cache-dir flask
+RUN pip3 install --no-cache-dir flask
+RUN rm -rf /root/.cache && rm -rf /var/cache/yum
 
-# Expose port 80 for internet access
 EXPOSE 80
 
-# Run the Python script when the container starts
-CMD ["python", "hello.py"]
+CMD ["python3.8", "hello.py"]
