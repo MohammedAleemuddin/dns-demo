@@ -7,10 +7,10 @@ env:
 phases:
   install:
     runtime-versions:
-      python: 3.8
+      python: 3.11  # Updated to use Python 3.11
     commands:
       - echo "Installing dependencies..."
-      - python3.8 -m pip install --upgrade pip
+      - python3.11 -m pip install --upgrade pip
       - pip3 install flask
 
   pre_build:
