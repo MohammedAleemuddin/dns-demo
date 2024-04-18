@@ -1,4 +1,4 @@
-FROM amazonlinux:2
+FROM public.ecr.aws/amazonlinux/amazonlinux:2
 
 ENV PATH="$PATH:/root/.local/bin"
 
@@ -18,3 +18,5 @@ RUN rm -rf /root/.cache && rm -rf /var/cache/yum
 EXPOSE 80
 
 CMD ["python3.8", "hello.py"]
+
+
