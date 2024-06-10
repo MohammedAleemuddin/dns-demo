@@ -1,14 +1,10 @@
-from flask import Flask, jsonify
+from flask import Flask
 
 app = Flask(__name__)
 
 @app.route('/')
 def hello():
     return 'Hello, Broadlume!'
-    
 
-@app.route('/health')
-def health_check():
-    return jsonify(status='healthy'), 200
-
-# No app.run() here for production
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=80)
