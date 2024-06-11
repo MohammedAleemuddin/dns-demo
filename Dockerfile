@@ -1,20 +1,25 @@
 FROM public.ecr.aws/amazonlinux/amazonlinux:2
 
-ENV PATH="$PATH:/root/.local/bin"
+# Install Python 3.8 and pip
+RUN yum clean all && \
+    yum install -y amazon-linux-extras && \
+    amazon-linux-extras enable python3.8 && \
+    yum install -y python3.8 python3-pip
 
-# Set working directory to /home
-WORKDIR /home
+# Set working directory
+WORKDIR /app
 
-
-RUN yum clean all && yum install -y amazon-linux-extras && amazon-linux-extras install python3.8
-
-RUN curl -O https://bootstrap.pypa.io/get-pip.py && python3.8 get-pip.py
-
+# Copy application files
 COPY hello.py .
+COPY requirements.txt .
 
-RUN pip3 install --no-cache-dir flask
-RUN rm -rf /root/.cache && rm -rf /var/cache/yum
+# Install dependencies
+RUN pip3 install --no-cache-dir -r requirements.txt && \
+    yum clean all && \
+    rm -rf /root/.cache /var/cache/yum
 
+# Expose port 80
 EXPOSE 80
 
-CMD ["python3.8", "hello.py"]
+# Run with Gunicorn
+CMD ["gunicorn", "--bind", "0.0.0.0:80", "--workers", "4", "hello:app"]
